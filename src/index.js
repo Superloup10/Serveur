@@ -18,4 +18,20 @@ app/*.use(morgan('combined')
 }).use(function(req, res, next) { // 404 Page
 	res.status(404).render("404.ejs"); // Render 404 page and send status 404
 });
-app.listen(8080); // Server Started on localhost:8080
+
+var http = require('http');
+var fs = require('fs');
+
+var server = http.createServer(function(req, res) {
+	fs.readFile('./index.html', 'utf-8', function(error, content) {
+		res.writeHead(200, {"Content-Type": "text/html"});
+		res.end(content);
+	});
+});
+
+var io = require('socket.io')(server);
+io.on('connection',function(socket) {
+	socket.emit('message', 'Vous êtes bien connecté !');
+});
+
+server.listen(8080); // Server Started on localhost:8080
