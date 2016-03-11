@@ -1,8 +1,10 @@
 var express = require('express'); //Framework de base
 // var morgan = require('morgan'); //Middleware de log
 //var favicon = require('serve-favicon'); // Middleware de favicon
-
 var app = express();
+var http = require('http');
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 
 app/*.use(morgan('combined')
 ).use(express.static(__dirname + '/public')
@@ -19,17 +21,12 @@ app/*.use(morgan('combined')
 	res.status(404).render("404.ejs"); // Render 404 page and send status 404
 });
 
-var http = require('http');
-var fs = require('fs');
-
-var server = http.createServer(app);
-
-var io = require('socket.io')(server);
-io.on('connection',function(socket) {
-	socket.emit('message', 'Vous êtes bien connecté !');
+io.on('connection',function(socket) { // Event connection au serveur
+	socket.emit('message', 'Vous êtes bien connecté !'); // On indique au client qu'il est bien connecté
 	
-	socket.on('message', function(message) {
-		console.log('Un client me parle ! Il me dit : ' + message);
+	socket.on('message', function(message) { // On attend un message du client
+		console.log('Un client me parle ! Il me dit : ' + message); // Le client a envoyé un message
+		socket.emit('message', 'Oui, ça va, mais arrête de m\'embêter'); // On envoit un message au client
 	});
 });
 
