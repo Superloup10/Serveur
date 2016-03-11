@@ -1,1 +1,17 @@
 <p>Bienvenue sur la page d'accueil du serveur</p>
+
+
+<p><input type="button" value="Embêter le serveur" id="poke" /></p>
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://172.16.8.58:8080/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('http://172.16.8.58:8080');
+        socket.on('message', function(message) {
+        	alert('Le serveur a un message pour vous : ' + message);
+        })
+        
+        $('#poke').click(function() {
+        	socket.emit('message', 'Salut serveur, ça va ?');
+        })
+</script>
