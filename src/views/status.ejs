@@ -1,12 +1,22 @@
-<table>
-	<tr>
-		<td>Numéro de la place</td>
-		<td>Occuper / Non occuper</td>
-	</tr>
-	<tr><% for(var i = 0; i < 8; i++) { %>
-	        <td><%= num[i] %></td>
-	        <td>
-	            <%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
-	        </td>
-	</tr><% } %>
-</table>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="urf-8"/>
+		<link rel="stylesheet" href="/css/style.css"/>
+		<title>Status</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th>Numéro de la place</th>
+				<th>Status</th>
+			</tr>
+			<tr><% for(var i = 0; i < 8; i++) { %>
+	        		<td><%= num[i] %></td>
+	        		<td>
+	            			<%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
+	        		</td>
+			</tr><% } %>
+		</table>
+	</body>
+</html>

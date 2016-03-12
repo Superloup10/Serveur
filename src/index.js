@@ -7,14 +7,38 @@ var server = http.createServer(app); // On créé le serveur d'après la variabl
 var io = require('socket.io')(server); // Module du temps réel
 var fs = require('fs'); // Module de fichier
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a'}); // On créé une fichier de log
+/*var session = require('cookie-session');
+var bodyParser = require('body-parser');
+var urlencodedParser = bodyParser.urlencoded({ extended: false });*/
 
 app.use(logger('dev', // On utilise un logger
-	{ stream: accessLogStream } // On enregiste les logs dans un fichier
+	{ stream: accessLogStream } // On enregistre les logs dans un fichier
 )).use(express.static(__dirname + '/public') // Dossier où se trouve les images
 ).use(favicon(__dirname + '/public/favicon.ico') // Lien vers le favicon
-).get('/', function(req, res) { // Page principale
+)/*.use(session({ secret: 'secret' })
+).use(function(req, res, next) {
+	if(typeof(req.session.register) == 'undefined') {
+		req.session.register = [];
+	}
+	next();
+})*/.get('/', function(req, res) { // Page principale
 	res.render("index.ejs"); // Rendu de la page principale
-}).get('/admin', function(req, res) { // Page Admin
+}).get('/inscription', function(req, res) { // Page d'inscription
+	res.render("inscription.ejs"); //Rendu de la page d'inscription
+})/*.post('/inscription/personnel', urlencodedParser, function(req, res) {
+	if(req.body.username != '') {
+		req.session.register.push(req.body.username);
+	}
+	
+	if(req.body.password != '') {
+		req.session.register.push(req.body.password);
+	}
+	
+	if(req.body.fonction != '') {
+		req.session.register.push(req.body.fonction);
+	}
+	res.redirect('/inscription');
+})*/.get('/admin', function(req, res) { // Page Admin
 	res.render("admin.ejs"); // Rendu de la page Admin
 }).get('/admin/status', function(req, res) { // Page status
 	var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
