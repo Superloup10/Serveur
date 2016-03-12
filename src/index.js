@@ -1,14 +1,17 @@
 var express = require('express'); //Framework de base
-var morgan = require('morgan'); //Middleware de log
+var logger = require('morgan'); //Middleware de log
 var favicon = require('serve-favicon'); // Middleware de favicon
 var app = express(); //Variable app créé d'après le framework
 var http = require('http'); //Module du protocole HTTP
-var server = http.createServer(app); // On créait le serveur d'après la variable app
+var server = http.createServer(app); // On créé le serveur d'après la variable app
 var io = require('socket.io')(server); // Module du temps réel
+var fs = require('fs'); // Module de fichier
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a'}); // On créé une fichier de log
 
-app.use(morgan('combined') // On utilise un logger
-).use(express.static(__dirname + '/img') // Dossier où se trouve les images
-).use(favicon(__dirname + '/img/favicon.ico') // Lien vers le favicon
+app.use(logger('dev', // On utilise un logger
+	{ stream: accessLogStream } // On enregiste les logs dans un fichier
+)).use(express.static(__dirname + '/public') // Dossier où se trouve les images
+).use(favicon(__dirname + '/public/favicon.ico') // Lien vers le favicon
 ).get('/', function(req, res) { // Page principale
 	res.render("index.ejs"); // Rendu de la page principale
 }).get('/admin', function(req, res) { // Page Admin
