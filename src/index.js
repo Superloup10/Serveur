@@ -1,24 +1,24 @@
 var express = require('express'); //Framework de base
-// var morgan = require('morgan'); //Middleware de log
-//var favicon = require('serve-favicon'); // Middleware de favicon
-var app = express();
-var http = require('http');
-var server = http.createServer(app);
-var io = require('socket.io')(server);
+var morgan = require('morgan'); //Middleware de log
+var favicon = require('serve-favicon'); // Middleware de favicon
+var app = express(); //Variable app créé d'après le framework
+var http = require('http'); //Module du protocole HTTP
+var server = http.createServer(app); // On créait le serveur d'après la variable app
+var io = require('socket.io')(server); // Module du temps réel
 
-app/*.use(morgan('combined')
-).use(express.static(__dirname + '/public')
-).use(favicon(__dirname + '/public/favicon.ico'))*/
-.get('/', function(req, res) { // Main page
-	res.render("index.ejs"); // Render Main page
-}).get('/admin', function(req, res) { // Admin page
-	res.render("admin.ejs"); // Render Admin page
-}).get('/admin/status', function(req, res) { // Status page
-	var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Place of parking Number
-	var occuper = ["occuper", "non occuper"]; // Place of parking Status
-	res.render("status.ejs", {num: num, occuper: occuper}); // Render Status page and send params temp
-}).use(function(req, res, next) { // 404 Page
-	res.status(404).render("404.ejs"); // Render 404 page and send status 404
+app.use(morgan('combined') // On utilise un logger
+).use(express.static(__dirname + '/img') // Dossier où se trouve les images
+).use(favicon(__dirname + '/img/favicon.ico') // Lien vers le favicon
+).get('/', function(req, res) { // Page principale
+	res.render("index.ejs"); // Rendu de la page principale
+}).get('/admin', function(req, res) { // Page Admin
+	res.render("admin.ejs"); // Rendu de la page Admin
+}).get('/admin/status', function(req, res) { // Page status
+	var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
+	var occuper = ["occuper", "non occuper"]; // Status de la place de parking
+	res.render("status.ejs", {num: num, occuper: occuper}); // Rendu de la page status et envoit de données temporaires
+}).use(function(req, res, next) { // Page 404
+	res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
 });
 
 io.on('connection',function(socket) { // Event connection au serveur
