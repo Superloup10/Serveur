@@ -11,7 +11,7 @@
 				<th>Numéro de la place</th>
 				<th>Status</th>
 			</tr>
-			<tr><% for(var i = 0; i < 8; i++) { %>
+			<tr><% for(var i = 0; i < num.length; i++) { %>
 	        		<td><%= num[i] %></td>
 	        		<td>
 	            			<%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
