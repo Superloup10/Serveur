@@ -8,15 +8,28 @@
 	<body>
 		<form method="post" action="/inscription/personnel">
 			<p>
-				<label for="user">Pseudo : </label>
-				<input type="text" name="username" id="user" required/>
-				<br/><br/>
-				<label for="pass">Mot de passe : </label>
-				<input type="password" name="password" id="pass" required/>
-				<br/><br/>
-				<label for="func">Fonction dans la société : </label>
-				<input type="text" name="fonction" id="func" required/>
-				<br/><br/>
+				<fieldset>
+					<legend>Identité</legend>
+					<label for="name">Nom : </label>
+					<input type="text" name="name" id="name" required/>
+					<br/><br/>
+					<label for="firstname">Prénom : </label>
+					<input type="text" name="firstname" id="firstname" required/>
+					<br/><br/>
+					<label for="func">Fonction dans la société : </label>
+					<input type="text" name="fonction" id="func" required/>
+					                                                                                
+				</fieldset>
+				<br/>
+				<fieldset>
+					<legend>Identifiant de connection</legend>
+					<label for="user">Pseudo : </label>
+					<input type="text" name="username" id="user" required/>
+					<br/><br/>
+					<label for="pass">Mot de passe : </label>
+					<input type="password" name="password" id="pass" required/>
+				</fieldset>	
+				<br/>
 				<input type="submit" valu="Envoyer"/>
 			</p>
 		</form>

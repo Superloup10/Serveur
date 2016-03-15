@@ -6,13 +6,23 @@ var http = require('http'); //Module du protocole HTTP
 var server = http.createServer(app); // On créé le serveur d'après la variable app
 var io = require('socket.io')(server); // Module du temps réel
 var fs = require('fs'); // Module de fichier
-var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a'}); // On créé une fichier de log
+var fileStreamRotator = require('file-stream-rotator');
+var logDirectory = __dirname + '/log';
+
+fs.existsSync(logDirectory) || fs.mkdir(logDirectory);
+
+var accessLogStream = fileStreamRotator.getStream({ // On créé une fichier de log
+	date_format: 'YYMMDD',
+	filename: logDirectory + '/access-%DATE%.log',
+	frequency: 'daily',
+	verbose: false
+});
+
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-var ip = '192.168.1.37';
-
-
+var ip = '172.16.8.58';
+var port = '8080'
 
 app.use(logger('dev', // On utilise un logger
 	{ stream: accessLogStream } // On enregistre les logs dans un fichier
@@ -25,10 +35,18 @@ app.use(logger('dev', // On utilise un logger
 	}
 	next();
 }).get('/', function(req, res) { // Page principale
-	res.render("index.ejs", { ip: ip }); // Rendu de la page principale
+	res.render("index.ejs", { ip: ip, port: port }); // Rendu de la page principale
 }).get('/inscription', function(req, res) { // Page d'inscription
 	res.render("inscription.ejs"); //Rendu de la page d'inscription
 }).post('/inscription/personnel', urlencodedParser, function(req, res) {
+	if(req.body.name != '') {
+		req.session.register.push(req.body.name);
+	}
+	
+	if(req.body.firstname != '') {
+		req.session.register.push(req.body.firstname);
+	}
+	
 	if(req.body.username != '') {
 		req.session.register.push(req.body.username);
 	}
@@ -61,4 +79,4 @@ io.on('connection',function(socket) { // Event connection au serveur
 	});
 });
 
-server.listen(8080); // Server Started on localhost:8080
+server.listen(port); // Server Started on localhost:8080
