@@ -13,7 +13,7 @@
 		<p><input type="button" value="Embêter le serveur" id="poke" /></p>
 
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="http://<%= ip %>:8080/socket.io/socket.io.js"></script>
+		<script src="http://<%= ip %>:<%= port %>/socket.io/socket.io.js"></script>
 		<script>
 			var socket = io.connect('http://<%= ip %>:<%= port %>');
         		socket.on('message', function(message) {

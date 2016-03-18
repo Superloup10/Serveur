@@ -10,12 +10,20 @@
 			<tr>
 				<th>Numéro de la place</th>
 				<th>Status</th>
+				<th>Temps</th>
+				<th>Recharge</th>
+				<th>Prix</th>
+				<th>Utilisateur</th>
 			</tr>
 			<tr><% for(var i = 0; i < num.length; i++) { %>
 	        		<td><%= num[i] %></td>
 	        		<td>
 	            			<%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
 	        		</td>
+	        		<td><%= hour %> : <%= minute %> : <%= second %></td>
+	        		<td><%= reload %> kW</td>
+	        		<td><%= cost %>€</td>
+	        		<td><%= user[i * 5] %></td>
 			</tr><% } %>
 		</table>
 	</body>

@@ -21,8 +21,9 @@ var accessLogStream = fileStreamRotator.getStream({ // On créé une fichier de 
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-var ip = '172.16.8.58';
-var port = '8080'
+var ip = '192.168.1.15';
+var port = '8080';
+var mysql = require('mysql');
 
 app.use(logger('dev', // On utilise un logger
 	{ stream: accessLogStream } // On enregistre les logs dans un fichier
@@ -39,33 +40,20 @@ app.use(logger('dev', // On utilise un logger
 }).get('/inscription', function(req, res) { // Page d'inscription
 	res.render("inscription.ejs"); //Rendu de la page d'inscription
 }).post('/inscription/personnel', urlencodedParser, function(req, res) {
-	if(req.body.name != '') {
+	if(req.body.name != '' || req.body.firstname != '' || req.body.username != '' || req.body.password != '' || req.body.fonction != '') {
 		req.session.register.push(req.body.name);
-	}
-	
-	if(req.body.firstname != '') {
 		req.session.register.push(req.body.firstname);
-	}
-	
-	if(req.body.username != '') {
 		req.session.register.push(req.body.username);
-	}
-	
-	if(req.body.password != '') {
 		req.session.register.push(req.body.password);
-	}
-	
-	if(req.body.fonction != '') {
 		req.session.register.push(req.body.fonction);
 	}
-	console.log('session : ' + req.session.register);
 	res.redirect('/inscription');
 }).get('/admin', function(req, res) { // Page Admin
 	res.render("admin.ejs"); // Rendu de la page Admin
 }).get('/admin/status', function(req, res) { // Page status
 	var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
 	var occuper = ["occuper", "non occuper"]; // Status de la place de parking
-	res.render("status.ejs", {num: num, occuper: occuper}); // Rendu de la page status et envoit de données temporaires
+	res.render("status.ejs", {user: req.session.register, num: num, occuper: occuper, hour : '00', minute: '00', second: '00', reload: 100, cost: 100}); // Rendu de la page status et envoit de données temporaires
 }).use(function(req, res, next) { // Page 404
 	res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
 });
@@ -78,5 +66,22 @@ io.on('connection',function(socket) { // Event connection au serveur
 		socket.emit('message', 'Oui, ça va, mais arrête de m\'embêter'); // On envoit un message au client
 	});
 });
+
+var connection = mysql.createConnection( {
+	host : 'localhost',
+	user : 'parking',
+	password : 'parking',
+	database : 'parking'
+});
+
+connection.connect();
+
+connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+	if(err) throw err;
+
+	console.log('The solution is: ', rows[0].solution);
+});
+
+connection.end();
 
 server.listen(port); // Server Started on localhost:8080
