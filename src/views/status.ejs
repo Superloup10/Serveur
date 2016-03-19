@@ -15,16 +15,18 @@
 				<th>Prix</th>
 				<th>Utilisateur</th>
 			</tr>
-			<tr><% for(var i = 0; i < num.length; i++) { %>
-	        		<td><%= num[i] %></td>
-	        		<td>
-	            			<%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
-	        		</td>
-	        		<td><%= hour %> : <%= minute %> : <%= second %></td>
-	        		<td><%= reload %> kW</td>
-	        		<td><%= cost %>€</td>
-	        		<td><%= user[i * 5] %></td>
-			</tr><% } %>
+			<tr>
+			     <% var i = 0; %>
+                 <% result.forEach(function(index) {  %>
+	        	  <td><%= index.number %></td>
+	        	  <td>
+	              <%= occuper[Math.round(Math.random() * (occuper.length - 1))] %>
+	        	  </td>
+	        	  <td><%= hour %> : <%= minute %> : <%= second %></td>
+	        	  <td><%= index.reload %> kW</td>
+	        	  <td><%= index.bill %>€</td>
+	        	  <td><%= index.name + " " + index.firstName %></td>
+            </tr><% i++ }) %>
 		</table>
 	</body>
 </html>
