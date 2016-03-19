@@ -21,9 +21,20 @@ var accessLogStream = fileStreamRotator.getStream({ // On créé une fichier de 
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-var ip = '192.168.1.15';
+
+var ip = '192.168.1.37';
 var port = '8080';
+
 var mysql = require('mysql');
+var bdd = mysql.createConnection( {
+        host : 'localhost',
+        user : 'parking',
+        password : 'parking',
+        database : 'parking',
+        charset : 'utf8'
+});
+                                
+bdd.connect();
 
 app.use(logger('dev', // On utilise un logger
 	{ stream: accessLogStream } // On enregistre les logs dans un fichier
@@ -53,7 +64,16 @@ app.use(logger('dev', // On utilise un logger
 }).get('/admin/status', function(req, res) { // Page status
 	var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
 	var occuper = ["occuper", "non occuper"]; // Status de la place de parking
-	res.render("status.ejs", {user: req.session.register, num: num, occuper: occuper, hour : '00', minute: '00', second: '00', reload: 100, cost: 100}); // Rendu de la page status et envoit de données temporaires
+	/*bdd.query('SELECT reload FROM subscribe', function(err, result) {
+		if(err) throw err;
+
+	        console.log('Reload OK');*/
+		res.render("status.ejs", {user: req.session.register, num: num, occuper: occuper, hour : '00', minute: '00', second: '00', reload: 100/*result*//*bdd.query('SELECT reload FROM subscribe',function(err, rows,fields) {
+			if(err) throw err;
+		
+			console.log('Reload OK');
+		})*/, cost: 100}); // Rendu de la page status et envoit de données temporaires
+	/*});*/
 }).use(function(req, res, next) { // Page 404
 	res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
 });
@@ -67,21 +87,12 @@ io.on('connection',function(socket) { // Event connection au serveur
 	});
 });
 
-var connection = mysql.createConnection( {
-	host : 'localhost',
-	user : 'parking',
-	password : 'parking',
-	database : 'parking'
-});
-
-connection.connect();
-
-connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+/*connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
 	if(err) throw err;
 
 	console.log('The solution is: ', rows[0].solution);
-});
+});*/
 
-connection.end();
+bdd.end();
 
 server.listen(port); // Server Started on localhost:8080
