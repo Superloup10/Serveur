@@ -37,7 +37,7 @@ var bdd = mysql.createConnection( {
 
 bdd.connect();
 
-bdd.query('SELECT * FROM subscribe;SELECT * FROM parking', function(err, results, fields) {
+bdd.query('SELECT s.reload, s.bill, s.name, s.firstName, p.number, p.status, p.use_time FROM subscribe s JOIN parking p ON p.number = s.id_subscribe', function(err, results, fields) {
 	if(err) throw err;
 
     console.log(results);
@@ -70,7 +70,7 @@ bdd.query('SELECT * FROM subscribe;SELECT * FROM parking', function(err, results
 	}).get('/admin/status', function(req, res) { // Page status
 		var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
 		var occuper = ["occuper", "non occuper"]; // Status de la place de parking
-		res.render("status.ejs", {occuper: occuper, hour : '00', minute: '00', second: '00', result: results}); // Rendu de la page status et envoit de données temporaires
+		res.render("status.ejs", {result: results}); // Rendu de la page status et envoit de données temporaires
 	}).use(function(req, res, next) { // Page 404
 		res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
 	});
