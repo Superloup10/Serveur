@@ -16,15 +16,14 @@
 				<th>Utilisateur</th>
 			</tr>
 			<tr>
-			     <% var i = 0; %>
-                 <% result.forEach(function(index) {  %>
+                 	<% result.forEach(function(index) {  %>
 	        	  <td><%= index.number %></td>
 	        	  <td><%= index.status %></td>
 	        	  <td><%= index.use_time %></td>
 	        	  <td><%= index.reload %> kW</td>
 	        	  <td><%= index.bill %>€</td>
 	        	  <td><%= index.name + " " + index.firstName %></td>
-            </tr><% i++ }) %>
+            		</tr><% }) %>
 		</table>
 	</body>
 </html>

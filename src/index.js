@@ -22,12 +22,12 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.15';
+var ip = '172.16.8.58';
 var port = '8080';
 
 var mysql = require('mysql');
 var bdd = mysql.createConnection( {
-	multipleStatements: true,
+    multipleStatements: true,
     host : 'localhost',
     user : 'parking',
     password : 'parking',
@@ -37,10 +37,15 @@ var bdd = mysql.createConnection( {
 
 bdd.connect();
 
-bdd.query('SELECT s.reload, s.bill, s.name, s.firstName, p.number, p.status, p.use_time FROM subscribe s JOIN parking p ON p.number = s.id_subscribe', function(err, results, fields) {
-	if(err) throw err;
+var select_request = 'SELECT s.reload, s.bill, s.name, s.firstName, p.number, p.status, p.use_time FROM subscribe s JOIN parking p ON p.number = s.id_subscribe';
 
-    console.log(results);
+/*var insert_request = 'INSERT INTO staff SET ?';
+var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};*/
+
+bdd.query(select_request, function(err, results, fields) {
+	if(err) throw err; 
+
+    	console.log(results);
 
 	app.use(logger('dev', // On utilise un logger
 		{ stream: accessLogStream } // On enregistre les logs dans un fichier
@@ -64,12 +69,11 @@ bdd.query('SELECT s.reload, s.bill, s.name, s.firstName, p.number, p.status, p.u
 			req.session.register.push(req.body.password);
 			req.session.register.push(req.body.fonction);
 		}
+		console.log(req.session.register);
 		res.redirect('/inscription');
 	}).get('/admin', function(req, res) { // Page Admin
 		res.render("admin.ejs"); // Rendu de la page Admin
 	}).get('/admin/status', function(req, res) { // Page status
-		var num = ["0", "1", "2", "3", "4", "5", "6", "7"]; // Numéro de la place de parking
-		var occuper = ["occuper", "non occuper"]; // Status de la place de parking
 		res.render("status.ejs", {result: results}); // Rendu de la page status et envoit de données temporaires
 	}).use(function(req, res, next) { // Page 404
 		res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
