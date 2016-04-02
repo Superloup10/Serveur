@@ -1,0 +1,16 @@
+[0mGET /inscription [32m200 [0m13.262 ms - 2781[0m
+[0mGET /css/style.css [32m200 [0m2.355 ms - 76[0m
+[0mGET /favicon.ico [36m304 [0m0.783 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m0.562 ms - -[0m
+[0mGET /inscription [32m200 [0m4.284 ms - 2747[0m
+[0mGET /css/style.css [32m200 [0m1.402 ms - 76[0m
+[0mGET /favicon.ico [36m304 [0m1.004 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m0.673 ms - -[0m
+[0mGET /inscription [36m304 [0m3.725 ms - -[0m
+[0mGET /css/style.css [36m304 [0m0.651 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m2.970 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m6.154 ms - -[0m
+[0mGET /inscription [32m200 [0m2.423 ms - 2747[0m
+[0mGET /css/style.css [32m200 [0m2.103 ms - 76[0m
+[0mGET /favicon.ico [36m304 [0m1.745 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m1.892 ms - -[0m
