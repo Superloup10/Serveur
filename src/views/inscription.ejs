@@ -4,9 +4,10 @@
 		<meta charset="utf-8"/>
 		<link rel="stylesheet" href="/css/style.css"/>
 		<title>Inscription</title>
+		<script src="http://<%= ip %>:<%= port %>/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<form method="post" action="/inscription/personnel">
+		<form id="form" method="post" action="/inscription/personnel">
 			<p>
 				<fieldset>
 					<legend>Identité</legend>
@@ -17,8 +18,7 @@
 					<input type="text" name="firstname" id="firstname" required/>
 					<br/><br/>
 					<label for="func">Fonction dans la société : </label>
-					<input type="text" name="fonction" id="func" required/>
-					                                                                                
+					<input type="text" name="fonction" id="func" required/>                                                                           
 				</fieldset>
 				<br/>
 				<fieldset>
@@ -28,10 +28,50 @@
 					<br/><br/>
 					<label for="pass">Mot de passe : </label>
 					<input type="password" name="password" id="pass" required/>
-				</fieldset>	
+				</fieldset>
 				<br/>
-				<input type="submit" valu="Envoyer"/>
+				<input type="button" id="submitData" value="Envoyer"/>
 			</p>
 		</form>
+		<script>
+    		var name;
+            var firstName;
+            var fonction;
+            var username;
+            var password;
+            var submit;
+            var form = document.getElementById("form");
+            
+            var socket = io.connect('http://<%= ip %>:<%= port %>');
+            
+            var submitForm = function() {
+                console.log('Bien envoyé');
+                socket.emit('saveStaff', {
+                    'name' : name.value,
+                    'firstname' : firstName.value,
+                    'func' : fonction.value,
+                    'user' : username.value,
+                    'pass' : password.value
+                });
+            };
+            
+            form.addEventListener("load", function() {
+                name = document.getElementbyId("name");
+                firstName = document.getElementbyId("firstname");
+                fonction = document.getElementbyId("func");
+                username = document.getElementbyId("user");
+                password = document.getElementbyId("pass");
+                submit = document.getElementbyId("submitData");
+                submit.addEventListener("click", submitForm);
+            });
+            
+            socket.on('message', function(message) {
+                alert('Le serveur a un message pour vous : ' + message);
+            });
+            
+            socket.on('saveStaff', function(message) {
+                alert('Vous avez bien été enregistrer');
+            });
+        </script>
 	</body>
 </html>
