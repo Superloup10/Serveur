@@ -1,0 +1,34 @@
+{
+  "name": "index",
+  "version": "0.0.1",
+  "description": "My server for SIN",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cookie-session": "^2.0.0-alpha.1",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "file-stream-rotator": "^0.0.6",
+    "morgan": "^1.7.0",
+    "mysql": "^2.10.2",
+    "rasp2c": "^0.0.3",
+    "rs232": "^0.0.1",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.5",
+    "spi": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Superloup10/Serveur.git"
+  },
+  "author": "Superloup10",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Superloup10/Serveur/issues"
+  },
+  "homepage": "https://github.com/Superloup10/Serveur#readme"
+}
