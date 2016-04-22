@@ -7,7 +7,7 @@ var server = http.createServer(app); // On créé le serveur d'après la variabl
 var io = require('socket.io')(server); // Module du temps réel
 var fs = require('fs'); // Module de fichier
 var fileStreamRotator = require('file-stream-rotator');
-var logDirectory = __dirname + '/log';
+var logDirectory = '../log';
 
 fs.existsSync(logDirectory) || fs.mkdir(logDirectory);
 
@@ -22,7 +22,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.40';
+var ip = '172.16.8.58';
 var port = '8080';
 
 var db = require('./admin/bdd/bdd.js');
@@ -35,13 +35,12 @@ var processResources = function(result) {
 	for(key in result)
 	{
 		results = result;
-		console.log('Number : ' + result[key].number);
 	}
 };
 
 db.executeSelectQuery(select_request, processResources);
-/*var insert_request = 'INSERT INTO staff SET ?';
-var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};*/
+// var insert_request = 'INSERT INTO staff SET ?';
+// var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};
 
 app.use(logger('dev', // On utilise un logger
 { stream : accessLogStream } // On enregistre les logs dans un fichier
@@ -84,8 +83,8 @@ io.on('connection', function(socket) { // Event connection au serveur
 	});
 	
 	socket.on('saveStaff', function(data) {
-		console.log('Contenu du message : ' + data);
-		socket.emit('saveStaff', 'Bien Reçu');
+		console.log('Contenu du message : ' + data.user);
+		// db.executeInsertQuery('INSERT INTO staff(name, firstName, function, username, password, date) VALUES(data.name, data.firstname, data.func, data.user, data.pass, NOW())');
 	});
 });
 
