@@ -7,12 +7,12 @@
 		<script src="http://<%= ip %>:<%= port %>/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<form id="form" method="post" action="/inscription/personnel">
+		<form id="form" method="post" action="">
 			<p>
 				<fieldset>
 					<legend>Identité</legend>
-					<label for="name">Nom : </label>
-					<input type="text" name="name" id="name" required/>
+					<label for="lastName">Nom : </label>
+					<input type="text" name="lastName" id="lastName" required/>
 					<br/><br/>
 					<label for="firstname">Prénom : </label>
 					<input type="text" name="firstname" id="firstname" required/>
@@ -30,30 +30,47 @@
 					<input type="password" name="password" id="pass" required/>
 				</fieldset>
 				<br/>
-				<input type="submit" value="Envoyer"/>
+				<input type="button" id="test" value="Envoyer"/>
 			</p>
 		</form>
-	<script>
-    		var name = document.getElementById("name");
-            	var firstName = document.getElementById("firstname");
-            	var func = document.getElementById("func");
-            	var username = document.getElementById("user");
-            	var password = document.getElementById("pass");
-            	var form = document.getElementById("form");
+    	<script>
+        	var lastName = document.getElementById("lastName");
+            var firstName = document.getElementById("firstname");
+            var func = document.getElementById("func");
+            var username = document.getElementById("user");
+            var password = document.getElementById("pass");
+            var form = document.getElementById("form");
+            var test = document.getElementById("test");
+            var error = 1;
             
-            	var socket = io.connect('http://<%= ip %>:<%= port %>');
+            var socket = io.connect('http://<%= ip %>:<%= port %>');
             
-            	var submitForm = function() {
-                	socket.emit('saveStaff', {
-                    		'name' : name.value,
-                    		'firstname' : firstName.value,
-                    		'func' : func.value,
-                    		'user' : username.value,
-                    		'pass' : password.value
-                	});
-            	};
+            var submitForm = function() {
+               	socket.emit('registerAdmin', {
+                   		'name' : lastName.value,
+                   		'firstname' : firstName.value,
+                   		'func' : func.value,
+                   		'user' : username.value,
+                   		'pass' : password.value
+               	});
+               	
+               	socket.on('errorRegisterAdmin', function(message) {
+                    //alert(message);
+                    alert('Le pseudo ' + username.value + ' est déjà utilisé');
+                    console.log(message);
+                    //error = message.error;
+                    
+                    if(message == 0) {
+                        ;
+                    }
+                    else {
+                        form.action="/inscription/personnel";
+                        form.submit();
+                    }
+                });
+            };
             
-            	form.addEventListener("submit", submitForm);
+            test.addEventListener("click", submitForm);
         </script>
 	</body>
 </html>

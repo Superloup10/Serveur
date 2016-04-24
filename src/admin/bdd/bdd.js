@@ -19,27 +19,19 @@ db = module.exports = {
 		this.mySqlClient.end();
 	},
 
-	executeSelectQuery : function(selectQuery, callbackResultFunction) {
-		this.mySqlClient.query(selectQuery, function(error, results, fields) {
-			if(error)
-			{
+	executeSelectQuery : function(selectQuery, callbackResultFunction, data) {
+		this.mySqlClient.query(selectQuery, function(error, results) {
+			if(error) {
 				db.close();
 				return error;
 			}
-		
-			if(results.length > 0)
-			{
-				callbackResultFunction(results);
+			else {
+				callbackResultFunction(results, data);
 			}
-			else
-			{
-				console.log('Pas de données');
-			}
-			db.close();
 		});
 	},
 
-	executeInsertFunction : function(insertQuery) {
+	executeInsertQuery : function(insertQuery) {
 		this.mySqlClient.query(insertQuery , function(error, info) {
 			if(error)
 			{

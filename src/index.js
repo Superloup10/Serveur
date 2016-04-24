@@ -22,13 +22,12 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '172.16.8.58';
+var ip = '192.168.1.24';
 var port = '8080';
 
 var db = require('./admin/bdd/bdd.js');
 
 db.connect('localhost', 'parking', 'parking', 'parking');
-
 var select_request = 'SELECT s.reload, s.bill, s.name, s.firstName, p.number, p.status, p.use_time FROM subscribe s JOIN parking p ON p.number = s.id_subscribe';
 var results = null;
 var processResources = function(result) {
@@ -39,6 +38,7 @@ var processResources = function(result) {
 };
 
 db.executeSelectQuery(select_request, processResources);
+
 // var insert_request = 'INSERT INTO staff SET ?';
 // var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};
 
@@ -82,9 +82,30 @@ io.on('connection', function(socket) { // Event connection au serveur
 		socket.emit('message', 'Oui, ça va, mais arrête de m\'embêter'); // On envoit un  message au client
 	});
 	
-	socket.on('saveStaff', function(data) {
+	socket.on('registerAdmin', function(data) {
 		console.log('Contenu du message : ' + data.user);
-		// db.executeInsertQuery('INSERT INTO staff(name, firstName, function, username, password, date) VALUES(data.name, data.firstname, data.func, data.user, data.pass, NOW())');
+		db.connect('localhost', 'parking', 'parking', 'parking');
+		var empty = function empty(object) {
+			for(var i in object)
+				if(object.hasOwnProperty(i))
+					return false;
+			return true;
+		};
+		
+		var select_request = "SELECT name, firstName, function, username FROM staff WHERE username='" + data.user + "'";
+		var insert_request = "INSERT INTO staff(name, firstName, function, username, password, date) VALUES('" + data.name + "','"  + data.firstname + "','"  + data.func + "','" + data.user + "','" + data.pass + "', NOW())";
+		
+		var registerAdmin = function(results, data) {
+			if(empty(results)) {
+				db.executeInsertQuery(insert_request);
+				socket.emit('errorRegisterAdmin', 1);
+			}
+			else {
+				socket.emit('errorRegisterAdmin', 0);
+			}
+		};
+		
+		db.executeSelectQuery(select_request, registerAdmin, data);
 	});
 });
 
