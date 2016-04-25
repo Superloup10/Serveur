@@ -6,6 +6,7 @@ var http = require('http'); //Module du protocole HTTP
 var server = http.createServer(app); // On créé le serveur d'après la variable app
 var io = require('socket.io')(server); // Module du temps réel
 var fs = require('fs'); // Module de fichier
+var crypto = require('crypto');
 var fileStreamRotator = require('file-stream-rotator');
 var logDirectory = '../log';
 
@@ -22,7 +23,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.24';
+var ip = '172.16.8.58';
 var port = '8080';
 
 var db = require('./admin/bdd/bdd.js');
@@ -38,6 +39,11 @@ var processResources = function(result) {
 };
 
 db.executeSelectQuery(select_request, processResources);
+
+
+var pass = function(pass) {
+	return crypto.pbkdf2Sync(pass, 'CeciestunessaidechiffrementparleprotocolePBKDF2Sync', 2500, 512, 'sha512').toString('hex');
+}
 
 // var insert_request = 'INSERT INTO staff SET ?';
 // var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};
@@ -92,16 +98,20 @@ io.on('connection', function(socket) { // Event connection au serveur
 			return true;
 		};
 		
+		console.log(pass(data.pass));
 		var select_request = "SELECT name, firstName, function, username FROM staff WHERE username='" + data.user + "'";
-		var insert_request = "INSERT INTO staff(name, firstName, function, username, password, date) VALUES('" + data.name + "','"  + data.firstname + "','"  + data.func + "','" + data.user + "','" + data.pass + "', NOW())";
+		var insert_request = "INSERT INTO staff(name, firstName, function, username, password, date) VALUES('" + data.name + "','"  + data.firstname + "','"  + data.func + "','" + data.user + "','" + pass(data.pass) + "', NOW())";
 		
 		var registerAdmin = function(results, data) {
-			if(empty(results)) {
-				db.executeInsertQuery(insert_request);
+			if(data.name == '' || data.fistname == '' || data.func == '' || data.user == '' || data.pass == '') {
 				socket.emit('errorRegisterAdmin', 1);
 			}
-			else {
+			else if(empty(results)) {
+				db.executeInsertQuery(insert_request);
 				socket.emit('errorRegisterAdmin', 0);
+			}
+			else {
+				socket.emit('errorRegisterAdmin', 2);
 			}
 		};
 		

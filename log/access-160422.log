@@ -129,3 +129,14 @@
 [0mGET /css/style.css [36m304 [0m2.258 ms - -[0m
 [0mGET /favicon.ico [36m304 [0m2.092 ms - -[0m
 [0mGET /favicon.ico [36m304 [0m1.871 ms - -[0m
+[0mGET /inscription [32m200 [0m134.756 ms - 2104[0m
+[0mGET /css/style.css [36m304 [0m24.617 ms - -[0m
+[0mPOST /inscription/personnel [36m302 [0m194.133 ms - 68[0m
+[0mGET /inscription [32m200 [0m18.069 ms - 2104[0m
+[0mGET /css/style.css [36m304 [0m3.219 ms - -[0m
+[0mPOST /inscription/personnel [36m302 [0m19.202 ms - 68[0m
+[0mGET /inscription [32m200 [0m10.664 ms - 2104[0m
+[0mGET /css/style.css [36m304 [0m2.649 ms - -[0m
+[0mGET /admin [32m200 [0m12.852 ms - 42[0m
+[0mGET /admin/status [36m304 [0m19.096 ms - -[0m
+[0mGET /css/style.css [36m304 [0m2.426 ms - -[0m

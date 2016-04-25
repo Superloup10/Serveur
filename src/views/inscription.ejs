@@ -12,22 +12,22 @@
 				<fieldset>
 					<legend>Identité</legend>
 					<label for="lastName">Nom : </label>
-					<input type="text" name="lastName" id="lastName" required/>
+					<input type="text" name="lastName" id="lastName"/>
 					<br/><br/>
 					<label for="firstname">Prénom : </label>
-					<input type="text" name="firstname" id="firstname" required/>
+					<input type="text" name="firstname" id="firstname"/>
 					<br/><br/>
 					<label for="func">Fonction dans la société : </label>
-					<input type="text" name="fonction" id="func" required/>                                                                           
+					<input type="text" name="fonction" id="func"/>                                                                           
 				</fieldset>
 				<br/>
 				<fieldset>
 					<legend>Identifiant de connection</legend>
 					<label for="user">Pseudo : </label>
-					<input type="text" name="username" id="user" required/>
+					<input type="text" name="username" id="user"/>
 					<br/><br/>
 					<label for="pass">Mot de passe : </label>
-					<input type="password" name="password" id="pass" required/>
+					<input type="password" name="password" id="pass"/>
 				</fieldset>
 				<br/>
 				<input type="button" id="test" value="Envoyer"/>
@@ -41,7 +41,6 @@
             var password = document.getElementById("pass");
             var form = document.getElementById("form");
             var test = document.getElementById("test");
-            var error = 1;
             
             var socket = io.connect('http://<%= ip %>:<%= port %>');
             
@@ -55,17 +54,16 @@
                	});
                	
                	socket.on('errorRegisterAdmin', function(message) {
-                    //alert(message);
-                    alert('Le pseudo ' + username.value + ' est déjà utilisé');
-                    console.log(message);
-                    //error = message.error;
-                    
-                    if(message == 0) {
-                        ;
+                    if(message == 2) {
+                        alert('Le pseudo ' + username.value + ' est déjà enregistré!\nMerci de changer votre pseudo.');
                     }
-                    else {
+                    else if(message == 0){
+                    	alert('Vous avez bien été inscrit!');
                         form.action="/inscription/personnel";
                         form.submit();
+                    }
+                    else if(message == 1) {
+                    	alert('Merci de saisir tous les champs');
                     }
                 });
             };
