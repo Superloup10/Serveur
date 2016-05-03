@@ -23,7 +23,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '172.16.8.58';
+var ip = '192.168.1.40';
 var port = '8080';
 
 var db = require('./admin/bdd/bdd.js');
