@@ -23,9 +23,8 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.40';
+var ip = '172.16.8.58';
 var port = '8080';
-
 var db = require('./admin/bdd/bdd.js');
 
 db.connect('localhost', 'parking', 'parking', 'parking');
@@ -40,13 +39,9 @@ var processResources = function(result) {
 
 db.executeSelectQuery(select_request, processResources);
 
-
 var pass = function(pass) {
 	return crypto.pbkdf2Sync(pass, 'CeciestunessaidechiffrementparleprotocolePBKDF2Sync', 2500, 512, 'sha512').toString('hex');
 }
-
-// var insert_request = 'INSERT INTO staff SET ?';
-// var temp = {id: 'NULL', name: req.body.name, firstName: req.body.firstname, function: req.body.fonction, username: req.body.username, password: req.body.password, date: NOW()};
 
 app.use(logger('dev', // On utilise un logger
 { stream : accessLogStream } // On enregistre les logs dans un fichier
@@ -107,8 +102,13 @@ io.on('connection', function(socket) { // Event connection au serveur
 				socket.emit('errorRegisterAdmin', 1);
 			}
 			else if(empty(results)) {
-				db.executeInsertQuery(insert_request);
-				socket.emit('errorRegisterAdmin', 0);
+				if(data.pass >= 6) {
+					db.executeInsertQuery(insert_request);
+					socket.emit('errorRegisterAdmin', 0);
+				}
+				else {
+					socket.emit('errorRegisterAdmin', 3);
+				}
 			}
 			else {
 				socket.emit('errorRegisterAdmin', 2);

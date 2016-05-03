@@ -54,16 +54,21 @@
                	});
                	
                	socket.on('errorRegisterAdmin', function(message) {
-                    if(message == 2) {
-                        alert('Le pseudo ' + username.value + ' est déjà enregistré!\nMerci de changer votre pseudo.');
-                    }
-                    else if(message == 0){
-                    	alert('Vous avez bien été inscrit!');
-                        form.action="/inscription/personnel";
-                        form.submit();
-                    }
-                    else if(message == 1) {
-                    	alert('Merci de saisir tous les champs');
+                    switch(message) {
+                        case 0:
+                            alert('Vous avez bien été inscrit!');
+                            form.action="/inscription/personnel";
+                            form.submit();
+                            break;
+                        case 1:
+                            alert('Merci de saisir tous les champs');
+                            break;
+                        case 2:
+                            alert('Le pseudo ' + username.value + ' est déjà enregistré!\nMerci de changer votre pseudo.');
+                            break;
+                        case 3:
+                            alert('Merci de créer un mot de passe d\'au moins six caractères');
+                            break;
                     }
                 });
             };
