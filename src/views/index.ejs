@@ -6,13 +6,30 @@
 		<title>Accueil</title>
 	</head>
 	<body>
-		<noscript><h1>La page que vous essayez de charger contient du code JavaScript. Merci de l'activer !</h1></noscript>
-		<p>Bienvenue sur la page d'accueil du serveur</p>
-
-
-		<p><input type="button" value="Embêter le serveur" id="poke" /></p>
-
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<header>
+			<h1>Projet STI2D SIN</h1>
+			<h2>Serveur RaspberryPi</h2>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="/inscription">Inscription du personnel</a></li>
+				<li><a href="/admin">Administration</a></li>
+			</ul>
+		</nav>
+		<section>
+			<article>
+				<noscript><h1>Le site que vous essayer de charger contient du code JavaScript. Merci de l'activer!</h1></noscript>
+				<p>Bienvenue sur la page d'accueil du serveur</p>
+			</article>
+			<aside>
+			</aside>
+			<article>
+				<p>Ce projet a été réaliser durant l'année 2015 - 2016 par Mr ANDRÉ Damien, Mr MOREL Alexandre, et Mr RIVE Alan de la classe de T°STI2D2 spécialité SIN.</p>
+			</article>
+		</section>
+		<footer>
+			<p>Copyright(c) Mr ANDRÉ Damien, tous droits réservés</p>
+		</footer>
 		<script src="http://<%= ip %>:<%= port %>/socket.io/socket.io.js"></script>
 		<script>
 			var socket = io.connect('http://<%= ip %>:<%= port %>');
@@ -20,9 +37,6 @@
         			alert('Le serveur a un message pour vous : ' + message);
         		})
         
-        		$('#poke').click(function() {
-        			socket.emit('message', 'Salut serveur, ça va ?');
-        		})
-		</script>
+        	</script>
 	</body>
 </html>

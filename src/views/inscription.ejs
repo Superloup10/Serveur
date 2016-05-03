@@ -7,73 +7,89 @@
 		<script src="http://<%= ip %>:<%= port %>/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<form id="form" method="post" action="">
-			<p>
-				<fieldset>
-					<legend>Identité</legend>
-					<label for="lastName">Nom : </label>
-					<input type="text" name="lastName" id="lastName"/>
-					<br/><br/>
-					<label for="firstname">Prénom : </label>
-					<input type="text" name="firstname" id="firstname"/>
-					<br/><br/>
-					<label for="func">Fonction dans la société : </label>
-					<input type="text" name="fonction" id="func"/>                                                                           
-				</fieldset>
-				<br/>
-				<fieldset>
-					<legend>Identifiant de connection</legend>
-					<label for="user">Pseudo : </label>
-					<input type="text" name="username" id="user"/>
-					<br/><br/>
-					<label for="pass">Mot de passe : </label>
-					<input type="password" name="password" id="pass"/>
-				</fieldset>
-				<br/>
-				<input type="button" id="test" value="Envoyer"/>
-			</p>
-		</form>
-    	<script>
-        	var lastName = document.getElementById("lastName");
-            var firstName = document.getElementById("firstname");
-            var func = document.getElementById("func");
-            var username = document.getElementById("user");
-            var password = document.getElementById("pass");
-            var form = document.getElementById("form");
-            var test = document.getElementById("test");
+		<header>
+			<h1>Projet STI2D SIN</h1>
+			<h1>Serveur RaspberryPi</h2>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="/inscription">Inscription du personnel</a></li>
+				<li><a href="/admin">Administration</a></li>
+				<li><a href="/">Retour à l'accueil</a></li>
+			</ul>
+		</nav>
+		<section>
+			<form id="form" method="post" action="">
+				<p>
+					<fieldset>
+						<legend>Identité</legend>
+						<label for="lastName">Nom : </label>
+						<input type="text" name="lastName" id="lastName"/>
+						<br/><br/>
+						<label for="firstname">Prénom : </label>
+						<input type="text" name="firstname" id="firstname"/>
+						<br/><br/>
+						<label for="func">Fonction dans la société : </label>
+						<input type="text" name="fonction" id="func"/>                                                                           
+					</fieldset>
+					<br/>
+					<fieldset>
+						<legend>Identifiant de connection</legend>
+						<label for="user">Pseudo : </label>
+						<input type="text" name="username" id="user"/>
+						<br/><br/>
+						<label for="pass">Mot de passe : </label>
+						<input type="password" name="password" id="pass"/>
+					</fieldset>
+					<br/>
+					<input type="button" id="button" value="Envoyer"/>
+				</p>
+			</form>
+		</section>
+    		<script>
+        		var lastName = document.getElementById("lastName");
+            		var firstName = document.getElementById("firstname");
+            		var func = document.getElementById("func");
+            		var username = document.getElementById("user");
+            		var password = document.getElementById("pass");
+            		var form = document.getElementById("form");
+            		var button = document.getElementById("button");
             
-            var socket = io.connect('http://<%= ip %>:<%= port %>');
+            		var socket = io.connect('http://<%= ip %>:<%= port %>');
             
-            var submitForm = function() {
-               	socket.emit('registerAdmin', {
-                   		'name' : lastName.value,
-                   		'firstname' : firstName.value,
-                   		'func' : func.value,
-                   		'user' : username.value,
-                   		'pass' : password.value
-               	});
+            		var submitForm = function() {
+               			socket.emit('registerAdmin', {
+                   			'name' : lastName.value,
+                   			'firstname' : firstName.value,
+                   			'func' : func.value,
+                   			'user' : username.value,
+                   			'pass' : password.value
+               			});
                	
-               	socket.on('errorRegisterAdmin', function(message) {
-                    switch(message) {
-                        case 0:
-                            alert('Vous avez bien été inscrit!');
-                            form.action="/inscription/personnel";
-                            form.submit();
-                            break;
-                        case 1:
-                            alert('Merci de saisir tous les champs');
-                            break;
-                        case 2:
-                            alert('Le pseudo ' + username.value + ' est déjà enregistré!\nMerci de changer votre pseudo.');
-                            break;
-                        case 3:
-                            alert('Merci de créer un mot de passe d\'au moins six caractères');
-                            break;
-                    }
-                });
-            };
+               			socket.on('errorRegisterAdmin', function(message) {
+                    			switch(message) {
+                        			case 0:
+                            				alert('Vous avez bien été inscrit!');
+                            				form.action="/inscription/personnel";
+                            				form.submit();
+                            				break;
+                        			case 1:
+                            				alert('Merci de saisir tous les champs');
+                            				break;
+                        			case 2:
+                            				alert('Le pseudo ' + username.value + ' est déjà enregistré!\nMerci de changer votre pseudo.');
+                            				break;
+                        			case 3:
+                            				alert('Merci de créer un mot de passe d\'au moins six caractères');
+                            				break;
+                    			}
+                		});
+            		};
             
-            test.addEventListener("click", submitForm);
-        </script>
+            		button.addEventListener("click", submitForm);
+        	</script>
+        	<footer>
+        		<p>Copyright(C) Mr ANDRÉ Damien, tous droits réservés.</p>
+        	</footer>
 	</body>
 </html>

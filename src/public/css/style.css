@@ -7,3 +7,21 @@ td, th
 {
 	border: 1px solid black;
 }
+
+header, article
+{
+	
+	text-align: center;
+}
+
+nav, section
+{
+	display: inline-block;
+	vertical-align: top;
+}
+
+footer
+{
+	position: fixed;
+	bottom: 0px;
+}

@@ -1,1 +1,38 @@
-<h1>Voici la page d'administration !</h1>
+<!Doctype HTML>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="css/style.css" />
+		<title>Administration</title>
+	</head>
+	<body>
+		<header>
+			<h1>Projet STI2D SIN</h1>
+			<h2>Serveur RaspberryPi</h2>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="/inscription">Inscription du personnel</a></li>
+				<li><a href="/admin">Administration</a></li>
+				<li><a href="/">Retour à l'accueil</a></li>
+			</ul>
+		</nav>
+		<section>
+			<h3>Voici la page d'administration</h3>
+			<form id="form" method="post" action="">
+				<p>
+					<label for="user">Pseudo : </label>
+					<input type="text" name="username" id="user"/>
+					<br/><br/>
+					<label for="pass">Mot de passe : </label>
+					<input type="password" name="password" id="pass"/>
+					<br/>
+					<input type="button" id="button" value="Envoyer"/>
+				</p>
+			</form>
+		</section>
+		<footer>
+			<p>Copyright(C) Mr ANDRÉ Damien, tous droits réservés.</p>
+		</footer>
+	</body>
+</html>
