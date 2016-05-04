@@ -21,9 +21,9 @@ var accessLogStream = fileStreamRotator.getStream({ // On créé une fichier de 
 
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '172.16.8.58';
+var ip = '192.168.1.24';
 var port = '8080';
 var db = require('./admin/bdd/bdd.js');
 
@@ -57,7 +57,7 @@ app.use(logger('dev', // On utilise un logger
 	res.render("index.ejs", { ip : ip, port : port }); // Rendu de la page principale
 }).get('/inscription', function(req, res) { // Page d'inscription
 	res.render("inscription.ejs", { ip : ip, port : port }); // Rendu de la page d'inscription
-}).post('/inscription/personnel', urlencodedParser, function(req, res) {
+}).post('/inscription/personnel', urlEncodedParser, function(req, res) {
 		if(req.body.name != '' || req.body.firstname != '' || req.body.username != '' || req.body.password != '' || req.body.fonction != '') {
 			req.session.register.push(req.body.name);
 			req.session.register.push(req.body.firstname);
@@ -68,7 +68,9 @@ app.use(logger('dev', // On utilise un logger
 		//console.log(req.session.register);
 		res.redirect('/inscription');
 }).get('/admin', function(req, res) { // Page Admin
-	res.render("admin.ejs"); // Rendu de la page Admin
+	res.render("admin.ejs", {ip :ip, port : port}); // Rendu de la page Admin
+}).post('/admin/connection', urlEncodedParser, function(req, res) {
+	res.redirect('/admin/status');
 }).get('/admin/status', function(req, res) { // Page status
 	res.render("status.ejs", { result : results }); // Rendu de la page status et envoit de données temporaires
 }).use(function(req, res, next) { // Page 404
@@ -83,8 +85,9 @@ io.on('connection', function(socket) { // Event connection au serveur
 		socket.emit('message', 'Oui, ça va, mais arrête de m\'embêter'); // On envoit un  message au client
 	});
 	
-	socket.on('registerAdmin', function(data) {
-		console.log('Contenu du message : ' + data.user);
+	socket.on('registerStaff', function(data) {
+		console.log('Pseudo : ' + data.user);
+		console.log('Pass : ' + data.pass);
 		db.connect('localhost', 'parking', 'parking', 'parking');
 		var empty = function empty(object) {
 			for(var i in object)
@@ -93,29 +96,42 @@ io.on('connection', function(socket) { // Event connection au serveur
 			return true;
 		};
 		
-		console.log(pass(data.pass));
 		var select_request = "SELECT name, firstName, function, username FROM staff WHERE username='" + data.user + "'";
 		var insert_request = "INSERT INTO staff(name, firstName, function, username, password, date) VALUES('" + data.name + "','"  + data.firstname + "','"  + data.func + "','" + data.user + "','" + pass(data.pass) + "', NOW())";
 		
-		var registerAdmin = function(results, data) {
+		var registerStaff = function(results, data) {
 			if(data.name == '' || data.fistname == '' || data.func == '' || data.user == '' || data.pass == '') {
-				socket.emit('errorRegisterAdmin', 1);
+				socket.emit('errorRegisterStaff', 1);
 			}
 			else if(empty(results)) {
 				if(data.pass >= 6) {
 					db.executeInsertQuery(insert_request);
-					socket.emit('errorRegisterAdmin', 0);
+					console.log(pass(data.pass));
+					socket.emit('errorRegisterStaff', 0);
 				}
 				else {
-					socket.emit('errorRegisterAdmin', 3);
+					socket.emit('errorRegisterStaff', 3);
 				}
 			}
 			else {
-				socket.emit('errorRegisterAdmin', 2);
+				socket.emit('errorRegisterStaff', 2);
 			}
 		};
 		
-		db.executeSelectQuery(select_request, registerAdmin, data);
+		db.executeSelectQuery(select_request, registerStaff, data);
+	});
+	
+	socket.on('connectionStaff', function(data) {
+		console.log('Pseudo : ' + data.user);
+		db.connect('localhost', 'parking', 'parking', 'parking');
+		var empty = function empty(object) {
+			for(var i in object)
+				if(object.hasOwnProperty(i))
+					return false;
+			return true;
+		};
+		
+		var select_request= "SELECT username, password FROM staff WHERE username='" + data.user + "'";
 	});
 });
 

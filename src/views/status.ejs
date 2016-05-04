@@ -6,24 +6,40 @@
 		<title>Status</title>
 	</head>
 	<body>
-		<table>
-			<tr>
-				<th>Numéro de la place</th>
-				<th>Status</th>
-				<th>Temps</th>
-				<th>Recharge</th>
-				<th>Prix</th>
-				<th>Utilisateur</th>
-			</tr>
-			<tr>
-               <% result.forEach(function(index) { %>
-	        	  <td><%= index.number %></td>
-	        	  <td><%= index.status %></td>
-	        	  <td><%= index.use_time %></td>
-	        	  <td><%= index.reload %> kW</td>
-	        	  <td><%= index.bill %>€</td>
-	        	  <td><%= index.name + " " + index.firstName %></td>
-                </tr><% }) %>
-		</table>
+	    <header>
+            <h1>Projet STI2D SIN</h1>
+            <h2>Serveur RaspberryPi</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/inscription">Inscription du personnel</a></li>
+                <li><a href="/admin">Adminstration</a></li>
+                <li><a href="/">Retour à l'accueil</a></li>
+            </ul>
+        </nav>
+	    <section>
+    		<table>
+    			<tr>
+    				<th>Numéro de la place</th>
+    				<th>Status</th>
+    				<th>Temps</th>
+    				<th>Recharge</th>
+    				<th>Prix</th>
+    				<th>Utilisateur</th>
+    			</tr>
+    			<tr>
+                   <% result.forEach(function(index) { %>
+    	        	  <td><%= index.number %></td>
+    	        	  <td><%= index.status %></td>
+    	        	  <td><%= index.use_time %></td>
+    	        	  <td><%= index.reload %> kW</td>
+    	        	  <td><%= index.bill %>€</td>
+    	        	  <td><%= index.name + " " + index.firstName %></td>
+                    </tr><% }) %>
+    		</table>
+		</section>
+		<footer>
+            <p>Copyright(C) Mr ANDRÉ Damien, tous droits réservés</p>
+        </footer>
 	</body>
 </html>
