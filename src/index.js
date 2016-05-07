@@ -131,7 +131,22 @@ io.on('connection', function(socket) { // Event connection au serveur
 			return true;
 		};
 		
-		var select_request= "SELECT username, password FROM staff WHERE username='" + data.user + "'";
+		var select_request = "SELECT username, password FROM staff WHERE username='" + data.user + "'";
+		
+		var connectionStaff = function(results, data) {
+			if(data.user == '' || data.pass == '') {
+				socket.emit('errorConnectionStaff', 1);
+			}
+			else if(empty(results)) {
+				console.log(pass(data.pass));
+				socket.emit('errorConnectionStaff' , 0);
+			}
+			else {
+				socket.emit('errorConnectionStaff', 2);
+			}
+		};
+		
+		db.executeSelectQuery(select_request, connectionStaff, data);
 	});
 });
 
