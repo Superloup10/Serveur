@@ -23,7 +23,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.24';
+var ip = '192.168.1.87';
 var port = '8080';
 var db = require('./admin/bdd/bdd.js');
 
@@ -104,7 +104,7 @@ io.on('connection', function(socket) { // Event connection au serveur
 				socket.emit('errorRegisterStaff', 1);
 			}
 			else if(empty(results)) {
-				if(data.pass >= 6) {
+				if(data.pass.length >= 6) {
 					db.executeInsertQuery(insert_request);
 					console.log(pass(data.pass));
 					socket.emit('errorRegisterStaff', 0);

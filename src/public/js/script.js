@@ -5,7 +5,7 @@
   var username = document.getElementById('user');
   var password = document.getElementById('pass');
   var button = document.getElementById('button');
-  var socket = io.connect('http://192.168.1.24:8080');
+  var socket = io.connect('http:\/\/192.168.1.87:8080');
   var submitForm = function () {
     socket.emit('registerStaff', {
       'name': lastName.value,
