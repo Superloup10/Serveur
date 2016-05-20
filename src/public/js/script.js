@@ -1,26 +1,30 @@
 (function() {
+  if(document.URL.contains('/inscription')) {
   var lastName = document.getElementById('lastName');
   var firstName = document.getElementById('firstname');
-  var func = document.getElementById('func');*/
+  var func = document.getElementById('func');
+  }
   var username = document.getElementById('user');
   var password = document.getElementById('pass');
   var button = document.getElementById('button');
-  var socket = io.connect('http:\/\/192.168.1.87:8080');
+  var socket = io.connect('http:\/\/172.16.8.58:8080');
   var submitForm = function() {
+   if(document.URL.contains('/inscription')) {
    socket.emit('registerStaff', {
       'name': lastName.value,
       'firstname': firstName.value,
       'func': func.value,
       'user': username.value,
       'pass': password.value
-    });*/
-    
-   /* socket.emit('connectionStaff', {
+   });
+   }
+   if(document.URL.contains('/admin')) { 
+   socket.emit('connectionStaff', {
     	'user': username.value,
     	'pass': password.value
-    });
-    
-    socket.on('errorConnectionStaff', function(message) {
+   });
+   
+   socket.on('errorConnectionStaff', function(message) {
       switch(message) {
     	case 0:
     	  alert('Vous avez bien été enregistré !');
@@ -37,9 +41,11 @@
     	  alert('');
     	  break;
       }
-    });*/
-    
-    socket.on('errorRegisterStaff', function(message) {
+   });
+   }
+   
+   if(document.URL.contains('/inscription')) {
+   socket.on('errorRegisterStaff', function(message) {
       switch (message) {
         case 0:
           alert('Vous avez bien été inscrit !');
@@ -58,5 +64,6 @@
       }
     });
   };
+  }
   button.addEventListener('click', submitForm);
 }) ()

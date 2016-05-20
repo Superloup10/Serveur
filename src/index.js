@@ -23,7 +23,7 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var urlEncodedParser = bodyParser.urlencoded({ extended: false });
 
-var ip = '192.168.1.87';
+var ip = '172.16.8.58';
 var port = '8080';
 var db = require('./admin/bdd/bdd.js');
 
@@ -65,7 +65,6 @@ app.use(logger('dev', // On utilise un logger
 			req.session.register.push(req.body.password);
 			req.session.register.push(req.body.fonction);
 		}
-		//console.log(req.session.register);
 		res.redirect('/inscription');
 }).get('/admin', function(req, res) { // Page Admin
 	res.render("admin.ejs", {ip :ip, port : port}); // Rendu de la page Admin
@@ -77,26 +76,20 @@ app.use(logger('dev', // On utilise un logger
 	res.status(404).render("404.ejs"); // Rendu de la page 404 et envoit du status 404
 });
 
+var empty = function empty(object) {
+	for(var i in object)
+		if(object.hasOwnProperty(i))
+			return false;
+	return true;
+};
+
 io.on('connection', function(socket) { // Event connection au serveur
 	socket.emit('message', 'Vous êtes bien connecté !'); // On indique au client qu'il est bien connecté
-
-	socket.on('message', function(message) { // On attend un message du client
-		console.log('Un client me parle ! Il me dit : ' + message); // Le client  a envoyé un message
-		socket.emit('message', 'Oui, ça va, mais arrête de m\'embêter'); // On envoit un  message au client
-	});
 	
 	socket.on('registerStaff', function(data) {
-		console.log('Pseudo : ' + data.user);
-		console.log('Pass : ' + data.pass);
 		db.connect('localhost', 'parking', 'parking', 'parking');
-		var empty = function empty(object) {
-			for(var i in object)
-				if(object.hasOwnProperty(i))
-					return false;
-			return true;
-		};
 		
-		var select_request = "SELECT name, firstName, function, username FROM staff WHERE username='" + data.user + "'";
+		var select_request = "SELECT username FROM staff WHERE username='" + data.user + "'";
 		var insert_request = "INSERT INTO staff(name, firstName, function, username, password, date) VALUES('" + data.name + "','"  + data.firstname + "','"  + data.func + "','" + data.user + "','" + pass(data.pass) + "', NOW())";
 		
 		var registerStaff = function(results, data) {
@@ -106,7 +99,7 @@ io.on('connection', function(socket) { // Event connection au serveur
 			else if(empty(results)) {
 				if(data.pass.length >= 6) {
 					db.executeInsertQuery(insert_request);
-					console.log(pass(data.pass));
+					console.log("L\'adminstrateur " + data.user + " vient de s\'inscrire");
 					socket.emit('errorRegisterStaff', 0);
 				}
 				else {
@@ -121,28 +114,41 @@ io.on('connection', function(socket) { // Event connection au serveur
 		db.executeSelectQuery(select_request, registerStaff, data);
 	});
 	
-	socket.on('connectionStaff', function(data) {
-		console.log('Pseudo : ' + data.user);
-		db.connect('localhost', 'parking', 'parking', 'parking');
-		var empty = function empty(object) {
-			for(var i in object)
-				if(object.hasOwnProperty(i))
-					return false;
-			return true;
+	socket.on('registerSubscribe', function(data) {
+		db.connect('parking', 'parking', 'parking', 'parking');
+		var rand = Math.floor(Math.random * (1000 - 0 + 1)) + 0;
+		var select_request = "SELECT id_subscribe FROM subscribe WHERE id_subscribe='" + data.id + "'";
+		var insert_request = "INSERT INTO subscribe(id_subscribe, name, firstName, model, mark, bill, reload, date) VALUES('" + rand + "','" + data.name + "','" + data.firstname + "','" + data.model + "','" + data.mark + "','" + 0 + "','" + 0 + "', NOW()";
+		
+		var registerSubscribe = function(results, data) {
+			if(data.name == '' || data.firstname == '' || data.model == '' || data.mark == '') {
+				socket.emit('errorRegisterSubscribe', 1);
+			}
+			else if(empty(results)) {
+				db.executeInsertQuery(insert_request);
+				console.log("L\'abonné " + data.name + " " + data.firstName + " vient de s\'inscrire");
+				socket.emit('errorRegisterSubscribe', 0);
+			}
 		};
 		
-		var select_request = "SELECT username, password FROM staff WHERE username='" + data.user + "'";
+		db.executeSelectQuery(select_query, registerSubscribe, data);
+	});
+	
+	socket.on('connectionStaff', function(data) {
+		db.connect('localhost', 'parking', 'parking', 'parking');
+		
+		var select_request = "SELECT username, password FROM staff WHERE username='" + data.user + "' AND password='" + pass(data.pass) + "'";
 		
 		var connectionStaff = function(results, data) {
 			if(data.user == '' || data.pass == '') {
 				socket.emit('errorConnectionStaff', 1);
 			}
 			else if(empty(results)) {
-				console.log(pass(data.pass));
-				socket.emit('errorConnectionStaff' , 0);
+				socket.emit('errorConnectionStaff' , 2);
 			}
 			else {
-				socket.emit('errorConnectionStaff', 2);
+				console.log(data.user + ' vient de se connecter.');
+				socket.emit('errorConnectionStaff', 0);
 			}
 		};
 		
